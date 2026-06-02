@@ -8,7 +8,7 @@ from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services import processor
 
 st.set_page_config(page_title="Student Submission", layout="centered")
-st.title("Submit Your Mentoring Record")
+st.title("Submit Your Mentoring Recording")
 
 students = db.get_students()
 if not students:
@@ -21,12 +21,12 @@ student_id = student_map[selected_name]
 
 round_num = st.radio("Round number", options=[1, 2, 3, 4], horizontal=True)
 
-st.subheader("Video Recording")
+st.subheader("Video Recording", anchor=False)
 video_file = st.file_uploader(
     "Upload your session recording", type=["mp4", "mov", "webm", "avi"]
 )
 
-st.subheader("Coach Self-Assessment Ratings")
+st.subheader("Coach Self-Assessment Ratings", anchor=False)
 
 ratings = {}
 current_category = None
@@ -47,7 +47,7 @@ for comp in COMPETENCIES:
             key=f"rating_{comp['name']}",
         )
 
-st.subheader("Coach Reflections")
+st.subheader("Coach Reflections", anchor=False)
 reflections = {}
 for question in REFLECTION_QUESTIONS:
     reflections[question] = st.text_area(question, height=80)
