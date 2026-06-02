@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.pytest_cache/
+.streamlit/
+uploads/*.mp4
+uploads/*.mov
+uploads/*.webm
+uploads/*.avi
+uploads/*.wav
+uploads/*.pdf
+data/*.db
