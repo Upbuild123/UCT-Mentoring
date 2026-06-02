@@ -24,7 +24,9 @@ def _create_folder(service, name: str, parent_id: str) -> str:
         "mimeType": "application/vnd.google-apps.folder",
         "parents": [parent_id],
     }
-    folder = service.files().create(body=meta, fields="id").execute()
+    folder = service.files().create(
+        body=meta, fields="id", supportsAllDrives=True
+    ).execute()
     return folder["id"]
 
 
@@ -32,8 +34,11 @@ def _make_public(service, file_id: str) -> str:
     service.permissions().create(
         fileId=file_id,
         body={"type": "anyone", "role": "reader"},
+        supportsAllDrives=True,
     ).execute()
-    file = service.files().get(fileId=file_id, fields="webViewLink").execute()
+    file = service.files().get(
+        fileId=file_id, fields="webViewLink", supportsAllDrives=True
+    ).execute()
     return file["webViewLink"]
 
 
@@ -52,7 +57,9 @@ def upload_file(local_path: str, folder_id: str, filename: str) -> str:
     service = _get_service()
     meta = {"name": filename, "parents": [folder_id]}
     media = MediaFileUpload(local_path, resumable=True)
-    file = service.files().create(body=meta, media_body=media, fields="id").execute()
+    file = service.files().create(
+        body=meta, media_body=media, fields="id", supportsAllDrives=True
+    ).execute()
     file_id = file["id"]
     file_url = _make_public(service, file_id)
     return file_url
