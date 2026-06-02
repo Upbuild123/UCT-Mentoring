@@ -24,15 +24,15 @@ def seed():
             print(f"Mentor already exists: {name}")
 
     students_data = [
-        ("Student 1", "Michael"),
-        ("Student 2", "Vipin"),
+        ("Student 1", "Michael", "student1@example.com"),
+        ("Student 2", "Vipin", "student2@example.com"),
     ]
 
     existing_students = {s["name"]: s for s in db.get_students()}
 
-    for name, mentor_name in students_data:
+    for name, mentor_name, email in students_data:
         if name not in existing_students:
-            s = db.add_student(name, mentor_ids[mentor_name])
+            s = db.add_student(name, mentor_ids[mentor_name], email)
             print(f"Created student: {name} (mentor: {mentor_name})")
         else:
             print(f"Student already exists: {name}")

@@ -7,6 +7,7 @@ def generate_pdf(
     student_name: str,
     transcript: str,
     ai_review: str,
+    mentor_feedback: str,
     output_path: str,
 ) -> None:
     pdf = FPDF()
@@ -49,5 +50,9 @@ def generate_pdf(
 
     heading("AI Review")
     body(ai_review or "(no review)")
+    pdf.ln(4)
+
+    heading("Mentor Feedback")
+    body(mentor_feedback or "(no mentor feedback)")
 
     pdf.output(output_path)

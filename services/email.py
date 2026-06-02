@@ -40,3 +40,40 @@ def send_mentor_notification(
         "subject": subject,
         "html": html,
     })
+
+
+def send_completion_notification(
+    mentor_email: str,
+    mentor_name: str,
+    student_email: str,
+    student_name: str,
+    round_num: int,
+    pdf_drive_url: str,
+) -> None:
+    api_key = os.environ.get("RESEND_API_KEY", "")
+    email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
+
+    subject = f"Your Round {round_num} Assessment is Ready - {student_name}"
+    html = f"""
+<h2>Mentoring Assessment Complete</h2>
+<p>The Round {round_num} assessment for <strong>{student_name}</strong> is now complete.</p>
+<ul>
+  <li><a href="{pdf_drive_url}">View Assessment PDF</a></li>
+</ul>
+"""
+
+    if not api_key:
+        print(f"[email] Would send completion to {mentor_email} and {student_email}: {subject}")
+        return
+
+    resend_lib.api_key = api_key
+    recipients = [mentor_email]
+    if student_email:
+        recipients.append(student_email)
+    for recipient in recipients:
+        resend_lib.Emails.send({
+            "from": email_from,
+            "to": recipient,
+            "subject": subject,
+            "html": html,
+        })

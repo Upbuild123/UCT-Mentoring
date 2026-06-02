@@ -37,7 +37,8 @@ def init_db() -> None:
             CREATE TABLE IF NOT EXISTS students (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                mentor_id INTEGER REFERENCES mentors(id)
+                mentor_id INTEGER REFERENCES mentors(id),
+                email TEXT
             );
             CREATE TABLE IF NOT EXISTS assessments (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,6 +52,7 @@ def init_db() -> None:
                 student_token TEXT UNIQUE,
                 mentor_token TEXT UNIQUE,
                 drive_folder_url TEXT,
+                drive_folder_id TEXT,
                 pdf_drive_url TEXT,
                 error_message TEXT,
                 submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -68,6 +70,16 @@ def init_db() -> None:
                 submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         """)
+    # Migrations for existing databases
+    for migration in [
+        "ALTER TABLE students ADD COLUMN email TEXT",
+        "ALTER TABLE assessments ADD COLUMN drive_folder_id TEXT",
+    ]:
+        try:
+            with _conn() as con:
+                con.execute(migration)
+        except Exception:
+            pass
 
 
 # --- Mentors ---
@@ -114,19 +126,20 @@ def get_student_by_id(student_id: int) -> Optional[dict]:
         return dict(row) if row else None
 
 
-def add_student(name: str, mentor_id: int) -> dict:
+def add_student(name: str, mentor_id: int, email: str = "") -> dict:
     with _conn() as con:
         cur = con.execute(
-            "INSERT INTO students (name, mentor_id) VALUES (?, ?)", (name, mentor_id)
+            "INSERT INTO students (name, mentor_id, email) VALUES (?, ?, ?)",
+            (name, mentor_id, email),
         )
-        return {"id": cur.lastrowid, "name": name, "mentor_id": mentor_id}
+        return {"id": cur.lastrowid, "name": name, "mentor_id": mentor_id, "email": email}
 
 
-def update_student(student_id: int, name: str, mentor_id: int) -> None:
+def update_student(student_id: int, name: str, mentor_id: int, email: str = "") -> None:
     with _conn() as con:
         con.execute(
-            "UPDATE students SET name = ?, mentor_id = ? WHERE id = ?",
-            (name, mentor_id, student_id),
+            "UPDATE students SET name = ?, mentor_id = ?, email = ? WHERE id = ?",
+            (name, mentor_id, email, student_id),
         )
 
 

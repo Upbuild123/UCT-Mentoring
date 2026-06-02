@@ -4,6 +4,7 @@ import json
 import streamlit as st
 import db
 from config import COMPETENCIES, REFLECTION_QUESTIONS
+from services.processor import generate_and_send_pdf
 
 st.set_page_config(page_title="Mentor Review", layout="wide")
 st.title("Mentor Review")
@@ -73,7 +74,13 @@ if st.button("Save Feedback", type="primary"):
         st.error("Please write feedback before saving.")
     else:
         db.save_mentor_feedback(assessment_id, feedback_text.strip())
-        st.success("Feedback saved.")
+        with st.spinner("Generating assessment PDF and sending to both parties..."):
+            try:
+                pdf_url = generate_and_send_pdf(assessment_id)
+                st.success("Feedback saved. Assessment PDF generated and emailed to you and the coach.")
+                st.markdown(f"[View Assessment PDF]({pdf_url})")
+            except Exception as e:
+                st.warning(f"Feedback saved, but PDF generation failed: {e}")
 
 if assessment.get("drive_folder_url"):
     st.markdown(f"[Open Drive Folder]({assessment['drive_folder_url']})")

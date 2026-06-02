@@ -103,11 +103,12 @@ with tab_students:
         with st.expander(f"{s['name']} -- mentor: {current_mentor_name or 'unassigned'}"):
             with st.form(key=f"student_form_{s['id']}"):
                 new_name = st.text_input("Name", value=s["name"])
+                new_email = st.text_input("Email", value=s.get("email") or "")
                 mentor_names = list(mentor_options.keys())
                 default_idx = mentor_names.index(current_mentor_name) if current_mentor_name in mentor_names else 0
                 new_mentor_name = st.selectbox("Mentor", mentor_names, index=default_idx)
                 if st.form_submit_button("Save"):
-                    db.update_student(s["id"], new_name.strip(), mentor_options[new_mentor_name])
+                    db.update_student(s["id"], new_name.strip(), mentor_options[new_mentor_name], new_email.strip())
                     st.success("Saved.")
                     st.rerun()
 
@@ -115,10 +116,11 @@ with tab_students:
     st.markdown("#### Add Student")
     with st.form("add_student_form"):
         name = st.text_input("Name")
+        new_student_email = st.text_input("Email")
         mentor_name = st.selectbox("Mentor", list(mentor_options.keys()))
         if st.form_submit_button("Add Student"):
             if name.strip():
-                db.add_student(name.strip(), mentor_options[mentor_name])
+                db.add_student(name.strip(), mentor_options[mentor_name], new_student_email.strip())
                 st.success(f"Student {name} added.")
                 st.rerun()
             else:
