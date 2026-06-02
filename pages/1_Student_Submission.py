@@ -19,7 +19,7 @@ student_map = {s["name"]: s["id"] for s in students}
 selected_name = st.selectbox("Your name", list(student_map.keys()))
 student_id = student_map[selected_name]
 
-round_num = st.number_input("Round number", min_value=1, max_value=50, value=1, step=1)
+round_num = st.radio("Round number", options=[1, 2, 3, 4], horizontal=True)
 
 st.subheader("Competency Ratings")
 
