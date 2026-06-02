@@ -67,6 +67,8 @@ def process_assessment(
 
         _progress(0.90, "Sending mentor notification...")
         app_url = os.environ.get("APP_URL", "http://localhost:8501")
+        transcript_url = f"{app_url}/Transcript?assessment_id={assessment_id}"
+        ai_review_url = f"{app_url}/AI_Review?assessment_id={assessment_id}"
         mentor_review_url = f"{app_url}/Mentor_Review?assessment_id={assessment_id}"
         email.send_mentor_notification(
             mentor_email=mentor_row["email"],
@@ -74,7 +76,8 @@ def process_assessment(
             student_name=student_row["name"],
             round_num=assessment["round"],
             video_drive_url=video_drive_url,
-            drive_folder_url=folder_url,
+            transcript_url=transcript_url,
+            ai_review_url=ai_review_url,
             mentor_review_url=mentor_review_url,
         )
 
