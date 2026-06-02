@@ -4,7 +4,7 @@ import json
 import os
 import streamlit as st
 import db
-from config import COMPETENCIES, REFLECTION_QUESTIONS
+from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services import processor
 
 st.set_page_config(page_title="Student Submission", layout="centered")
@@ -21,11 +21,25 @@ student_id = student_map[selected_name]
 
 round_num = st.number_input("Round number", min_value=1, max_value=50, value=1, step=1)
 
-st.subheader("Competency Self-Ratings")
-st.caption("Rate yourself from 1 (needs work) to 5 (excellent)")
+st.subheader("Competency Ratings")
+
 ratings = {}
+current_category = None
 for comp in COMPETENCIES:
-    ratings[comp] = st.slider(comp, min_value=1, max_value=5, value=3)
+    if comp["category"] != current_category:
+        current_category = comp["category"]
+        st.markdown(f"**{current_category}**")
+
+    st.markdown(f"**{comp['name']}**")
+    st.caption(comp["description"])
+    ratings[comp["name"]] = st.radio(
+        comp["name"],
+        options=RATING_OPTIONS,
+        index=None,
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+    st.divider()
 
 st.subheader("Reflections")
 reflections = {}
@@ -40,6 +54,11 @@ video_file = st.file_uploader(
 if st.button("Submit Assessment", type="primary"):
     if not video_file:
         st.error("Please upload a video recording before submitting.")
+        st.stop()
+
+    unrated = [comp["name"] for comp in COMPETENCIES if ratings.get(comp["name"]) is None]
+    if unrated:
+        st.warning(f"Please rate all competencies. Missing: {', '.join(unrated)}")
         st.stop()
 
     empty_reflections = [q for q in REFLECTION_QUESTIONS if not reflections[q].strip()]

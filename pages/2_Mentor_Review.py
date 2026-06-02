@@ -39,8 +39,8 @@ with col1:
     st.markdown("### Competency Ratings")
     ratings = json.loads(assessment.get("competency_ratings") or "{}")
     for comp in COMPETENCIES:
-        score = ratings.get(comp, "N/A")
-        st.write(f"**{comp}:** {score}/5")
+        score = ratings.get(comp["name"], "N/A")
+        st.write(f"**{comp['name']}:** {score}")
 
 with col2:
     st.markdown("### Reflections")
