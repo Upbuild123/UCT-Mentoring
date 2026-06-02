@@ -164,3 +164,57 @@ class TestPDFService:
 
         assert os.path.exists(output_path)
         assert os.path.getsize(output_path) > 1000
+
+
+class TestProcessor:
+    @pytest.fixture()
+    def db_with_data(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("DATABASE_URL", str(tmp_path / "test.db"))
+        monkeypatch.setenv("APP_URL", "http://localhost:8501")
+        import db
+        db.init_db()
+        mentor = db.add_mentor("Alice", "alice@example.com")
+        student = db.add_student("Bob", mentor["id"])
+        assessment = db.create_assessment(student["id"], 1, '{"Communication": 4}', '{"Q": "A"}')
+        return db, assessment, student, mentor
+
+    def test_process_assessment_success(self, mocker, tmp_path, db_with_data):
+        db, assessment, student, mentor = db_with_data
+        video_path = str(tmp_path / "video.mp4")
+        open(video_path, "wb").write(b"fake video")
+
+        mocker.patch("services.processor.drive.create_student_round_folder",
+                     return_value=("folder123", "https://drive.google.com/folder"))
+        mocker.patch("services.processor.drive.upload_file",
+                     return_value="https://drive.google.com/file")
+        mocker.patch("services.processor.openai_service.extract_audio")
+        mocker.patch("services.processor.openai_service.transcribe", return_value="Transcript text")
+        mocker.patch("services.processor.openai_service.generate_ai_review", return_value="AI review")
+        mocker.patch("services.processor.pdf.generate_pdf")
+        mocker.patch("services.processor.email.send_mentor_notification")
+
+        from services.processor import process_assessment
+        process_assessment(assessment["id"], video_path)
+
+        updated = db.get_assessment_by_id(assessment["id"])
+        assert updated["status"] == "complete"
+        assert updated["transcript"] == "Transcript text"
+        assert updated["drive_folder_url"] == "https://drive.google.com/folder"
+        ai_review = db.get_ai_review(assessment["id"])
+        assert ai_review["content"] == "AI review"
+
+    def test_process_assessment_sets_error_on_failure(self, mocker, tmp_path, db_with_data):
+        db, assessment, student, mentor = db_with_data
+        video_path = str(tmp_path / "video.mp4")
+        open(video_path, "wb").write(b"fake video")
+
+        mocker.patch("services.processor.drive.create_student_round_folder",
+                     side_effect=Exception("Drive failed"))
+
+        from services.processor import process_assessment
+        with pytest.raises(Exception, match="Drive failed"):
+            process_assessment(assessment["id"], video_path)
+
+        updated = db.get_assessment_by_id(assessment["id"])
+        assert updated["status"] == "error"
+        assert "Drive failed" in updated["error_message"]
