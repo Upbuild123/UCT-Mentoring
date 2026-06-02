@@ -22,7 +22,27 @@ def transcribe(audio_path: str) -> str:
     client = openai.OpenAI(api_key=api_key)
     with open(audio_path, "rb") as f:
         result = client.audio.transcriptions.create(model="whisper-1", file=f)
-    return result.text
+    raw = result.text
+    return _add_speaker_labels(client, raw)
+
+
+def _add_speaker_labels(client: openai.OpenAI, raw_transcript: str) -> str:
+    prompt = f"""Below is a raw transcript of a coaching session between a coach and their client.
+
+Reformat it with speaker labels on each turn. Use exactly "Coach:" and "Client:" as labels.
+- The coach typically asks questions, reflects back, and facilitates exploration.
+- The client shares their experience, challenges, and goals.
+
+Return only the formatted transcript — no commentary, no preamble.
+
+Raw transcript:
+{raw_transcript}"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
 
 
 def generate_ai_review(assessment: dict, transcript: str) -> str:
