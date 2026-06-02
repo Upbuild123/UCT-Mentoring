@@ -21,14 +21,14 @@ student_id = student_map[selected_name]
 
 round_num = st.radio("Round number", options=[1, 2, 3, 4], horizontal=True)
 
-st.subheader("Competency Ratings")
+st.subheader("Student Self-Assessment Ratings")
 
 ratings = {}
 current_category = None
 for comp in COMPETENCIES:
     if comp["category"] != current_category:
         current_category = comp["category"]
-        st.markdown(f"**{current_category}**")
+        st.markdown(f"### {current_category}")
 
     st.markdown(f"**{comp['name']}**")
     st.caption(comp["description"])
