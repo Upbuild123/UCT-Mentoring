@@ -1,13 +1,14 @@
 import json
 from fpdf import FPDF
+from config import COMPETENCIES, RATING_OPTIONS
 
 
 def generate_pdf(
     assessment: dict,
     student_name: str,
     transcript: str,
-    ai_review: str,
     mentor_feedback: str,
+    mentor_ratings: dict,
     output_path: str,
 ) -> None:
     pdf = FPDF()
@@ -25,17 +26,28 @@ def generate_pdf(
         pdf.ln(3)
 
     heading(f"Mentoring Assessment - Round {assessment['round']}", size=16)
-    body(f"Student: {student_name}")
+    body(f"Coach: {student_name}")
     body(f"Submitted: {assessment.get('submitted_at', 'N/A')}")
     pdf.ln(4)
 
+    # Competency ratings — coach vs mentor side by side
     heading("Competency Ratings")
-    ratings = json.loads(assessment.get("competency_ratings") or "{}")
-    for comp, score in ratings.items():
-        body(f"{comp}: {score}/5")
+    coach_ratings = json.loads(assessment.get("competency_ratings") or "{}")
+    pdf.set_font("Helvetica", style="B", size=10)
+    pdf.cell(90, 7, "Competency", new_x="RIGHT", new_y="TOP")
+    pdf.cell(50, 7, "Coach", new_x="RIGHT", new_y="TOP")
+    pdf.cell(50, 7, "Mentor", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", size=10)
+    for comp in COMPETENCIES:
+        name = comp["name"]
+        coach_val = coach_ratings.get(name, "-")
+        mentor_val = mentor_ratings.get(name, "-") if mentor_ratings else "-"
+        pdf.cell(90, 6, name, new_x="RIGHT", new_y="TOP")
+        pdf.cell(50, 6, str(coach_val), new_x="RIGHT", new_y="TOP")
+        pdf.cell(50, 6, str(mentor_val), new_x="LMARGIN", new_y="NEXT")
     pdf.ln(4)
 
-    heading("Reflections")
+    heading("Coach Reflections")
     reflections = json.loads(assessment.get("reflections") or "{}")
     for question, answer in reflections.items():
         pdf.set_font("Helvetica", style="B", size=11)
@@ -46,10 +58,6 @@ def generate_pdf(
 
     heading("Session Transcript")
     body(transcript or "(no transcript)")
-    pdf.ln(4)
-
-    heading("AI Review")
-    body(ai_review or "(no review)")
     pdf.ln(4)
 
     heading("Mentor Feedback")

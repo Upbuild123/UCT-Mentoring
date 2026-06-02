@@ -74,6 +74,7 @@ def init_db() -> None:
     for migration in [
         "ALTER TABLE students ADD COLUMN email TEXT",
         "ALTER TABLE assessments ADD COLUMN drive_folder_id TEXT",
+        "ALTER TABLE mentor_feedback ADD COLUMN mentor_ratings TEXT",
     ]:
         try:
             with _conn() as con:
@@ -222,12 +223,12 @@ def get_ai_review(assessment_id: int) -> Optional[dict]:
 
 # --- Mentor Feedback ---
 
-def save_mentor_feedback(assessment_id: int, feedback_text: str) -> None:
+def save_mentor_feedback(assessment_id: int, feedback_text: str, mentor_ratings: str = "{}") -> None:
     with _conn() as con:
         con.execute("DELETE FROM mentor_feedback WHERE assessment_id = ?", (assessment_id,))
         con.execute(
-            "INSERT INTO mentor_feedback (assessment_id, feedback_text) VALUES (?, ?)",
-            (assessment_id, feedback_text),
+            "INSERT INTO mentor_feedback (assessment_id, feedback_text, mentor_ratings) VALUES (?, ?, ?)",
+            (assessment_id, feedback_text, mentor_ratings),
         )
 
 

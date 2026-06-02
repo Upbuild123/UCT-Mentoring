@@ -15,11 +15,10 @@ def send_mentor_notification(
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
 
-    subject = f"New mentoring recording from {student_name} - Round {round_num}"
+    subject = f"Mentoring Recording. {student_name}. Round {round_num}"
     html = f"""
-<h2>New Mentoring Recording</h2>
+<p>There is a new mentoring recording to review.</p>
 <p>Hi {mentor_name},</p>
-<p><strong>{student_name}</strong> has submitted their Round {round_num} recording.</p>
 <ul>
   <li><a href="{video_drive_url}">Video recording</a></li>
   <li><a href="{transcript_url}">Transcript</a></li>

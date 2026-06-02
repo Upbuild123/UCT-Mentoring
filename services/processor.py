@@ -106,12 +106,14 @@ def generate_and_send_pdf(assessment_id: int) -> str:
 
     pdf_path = f"uploads/assessment_{assessment_id}.pdf"
     os.makedirs("uploads", exist_ok=True)
+    import json as _json
+    mentor_ratings = _json.loads(feedback.get("mentor_ratings") or "{}") if feedback else {}
     pdf.generate_pdf(
         assessment=assessment,
         student_name=student_row["name"],
         transcript=assessment.get("transcript") or "",
-        ai_review=ai_review["content"] if ai_review else "",
         mentor_feedback=feedback["feedback_text"] if feedback else "",
+        mentor_ratings=mentor_ratings,
         output_path=pdf_path,
     )
 
