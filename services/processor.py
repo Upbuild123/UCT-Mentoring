@@ -39,7 +39,7 @@ def process_assessment(
         )
 
         _progress(0.25, "Extracting audio...")
-        audio_path = video_path.rsplit(".", 1)[0] + ".wav"
+        audio_path = video_path.rsplit(".", 1)[0] + ".mp3"
         openai_service.extract_audio(video_path, audio_path)
 
         _progress(0.40, "Transcribing audio...")
