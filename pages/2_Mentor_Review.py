@@ -38,7 +38,7 @@ st.caption(f"Submitted: {assessment.get('submitted_at', 'N/A')} | Status: {asses
 
 # --- Competency ratings comparison ---
 st.divider()
-st.markdown("### Self-Assessment Ratings", anchor=False)
+st.markdown("### Self-Assessment Ratings")
 coach_ratings = json.loads(assessment.get("competency_ratings") or "{}")
 
 mentor_ratings = {}
@@ -70,7 +70,7 @@ st.caption("Left column: coach self-rating. Right column: your rating.")
 
 # --- Reflections ---
 st.divider()
-st.markdown("### Coach Reflections", anchor=False)
+st.markdown("### Coach Reflections")
 reflections = json.loads(assessment.get("reflections") or "{}")
 for question in REFLECTION_QUESTIONS:
     answer = reflections.get(question, "(no answer)")
@@ -79,19 +79,19 @@ for question in REFLECTION_QUESTIONS:
 
 # --- Transcript ---
 st.divider()
-st.markdown("### Session Transcript", anchor=False)
+st.markdown("### Session Transcript")
 transcript = assessment.get("transcript") or "(transcript not yet available)"
 st.text_area("Transcript", value=transcript, height=200, disabled=True, label_visibility="collapsed")
 
 # --- AI Review (mentor only) ---
 if ai_review:
     st.divider()
-    st.markdown("### AI Review", anchor=False)
+    st.markdown("### AI Review")
     st.info(ai_review["content"])
 
 # --- Mentor feedback ---
 st.divider()
-st.markdown("### Your Feedback", anchor=False)
+st.markdown("### Your Feedback")
 feedback_text = st.text_area(
     "Write your feedback for the coach",
     value=existing_feedback["feedback_text"] if existing_feedback else "",
