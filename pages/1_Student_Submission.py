@@ -26,7 +26,7 @@ video_file = st.file_uploader(
     "Upload your session recording", type=["mp4", "mov", "webm", "avi"]
 )
 
-st.subheader("Student Self-Assessment Ratings")
+st.subheader("Coach Self-Assessment Ratings")
 
 ratings = {}
 current_category = None
@@ -47,7 +47,7 @@ for comp in COMPETENCIES:
             key=f"rating_{comp['name']}",
         )
 
-st.subheader("Coach Self-Assessment")
+st.subheader("Coach Reflections")
 reflections = {}
 for question in REFLECTION_QUESTIONS:
     reflections[question] = st.text_area(question, height=80)
