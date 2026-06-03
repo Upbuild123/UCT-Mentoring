@@ -4,6 +4,7 @@ import os
 import streamlit as st
 import db
 from services import processor
+from services.openai_service import generate_ai_review
 
 st.set_page_config(page_title="Admin", layout="wide")
 st.title("Admin Dashboard")
@@ -59,6 +60,17 @@ with tab_assessments:
                                         st.rerun()
                                     except Exception as e:
                                         st.error(f"Retry failed: {e}")
+                    if a["status"] == "complete":
+                        if st.button(f"Regenerate AI Review #{a['id']}", key=f"regen_{a['id']}"):
+                            with st.spinner("Regenerating AI review..."):
+                                try:
+                                    assessment_data = db.get_assessment_by_id(a["id"])
+                                    transcript = assessment_data.get("transcript") or ""
+                                    new_review = generate_ai_review(assessment_data, transcript)
+                                    db.save_ai_review(a["id"], new_review)
+                                    st.success("AI review regenerated.")
+                                except Exception as e:
+                                    st.error(f"Failed: {e}")
 
 # --- Mentors Tab ---
 with tab_mentors:
