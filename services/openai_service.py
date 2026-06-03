@@ -80,7 +80,9 @@ Support observations with specific examples and quotes.
 
 ## OUTPUT STRUCTURE
 
-# Executive Summary
+Use this exact structure. Use bold headings only — no large markdown headings (do not use # or ##). Format as a clean professional document.
+
+**Summary**
 
 In 1-3 paragraphs:
 - What was the session really about?
@@ -88,83 +90,72 @@ In 1-3 paragraphs:
 - What stands out most about the coach's style?
 - What appears to be the coach's primary developmental edge?
 
-# Coaching Strengths
+**Meta-Skills**
 
-Identify the 3-7 strongest aspects of the coaching.
+Assess the coach specifically on two meta-skills:
 
-For each:
+*Serve Not Fix (Coaching the Person, Not the Problem)*
+- Was the coach working with the whole person or focused on solving the presenting problem?
+- Were there moments of advice-giving, rescuing, or fixing disguised as coaching?
+- Did the client do their own work, or did the coach do it for them?
+- Specific examples from the transcript.
 
-## [Strength]
+*Experiment and Learn*
+- Did the coach try anything new, unexpected, or risky for the sake of the client?
+- Was there evidence of following intuition or taking an exploratory risk?
+- Or did the coach stay in comfortable, predictable patterns?
+- Specific examples from the transcript.
 
-Describe:
+**Coaching Strengths**
+
+Identify between 3 and 7 strengths — no fewer than 3, no more than 7. For each:
+
+*[Strength title]*
 - What the coach did.
 - Why it worked.
 - How it affected the client.
 - Evidence from the transcript.
 
-Focus on recurring strengths rather than isolated moments.
+Focus on recurring strengths, not isolated moments.
 
-# Developmental Edges
+**Developmental Edges**
 
-Identify the 3-5 most important developmental edges.
+Identify between 3 and 5 developmental edges. For each:
 
-For each:
-
-## [Developmental Edge]
-
-Describe:
+*[Developmental edge title]*
 - What the coach did.
 - Why it may limit coaching effectiveness.
 - What a more advanced coach might have done.
 - Example questions or approaches that could have deepened the work.
 
-Focus on the highest-leverage growth opportunities.
+**Deepest Doorways**
 
-# Deepest Doorways
-
-Identify the 1-5 moments in the session that contained the greatest transformational potential.
-
-For each:
+Identify 1-5 moments with the greatest transformational potential. For each:
 - Quote the client's statement.
 - Explain why it mattered.
 - Explain what the coach did.
 - Explain where the coaching might have gone if the coach had stayed there longer.
 
-This section should focus on moments where identity, values, fear, assumptions, tension, purpose, or meaning emerged.
+Focus on moments where identity, values, fear, assumptions, tension, purpose, or meaning emerged.
 
-# Patterns in the Coach
+**Overall Assessment**
 
-Based on the session, identify recurring coaching tendencies. Only include patterns supported by evidence from this transcript.
-
-# Mentor Focus
-
-If the mentor had only 15 minutes with this coach, what would be the most valuable topic to discuss?
-
-Explain:
-- Why this is the highest-leverage developmental edge.
-- What evidence supports it.
-- What experiments or practices would help the coach improve.
-
-# Overall Assessment
-
-### Strongest Capabilities
+Strongest Capabilities:
 - Bullet list
 
-### Primary Growth Areas
+Primary Growth Areas:
 - Bullet list
 
-Rate each 1-10:
-- Listening
-- Presence
-- Curiosity
-- Following Client Energy
-- Emotional Depth
-- Ability to Evoke Insight
-- Challenge
-- Coaching Depth
-- Overall Effectiveness
-
-Finally answer:
+Ratings (1-10):
+- Listening:
+- Presence:
+- Curiosity:
+- Following Client Energy:
+- Emotional Depth:
+- Ability to Evoke Insight:
+- Challenge:
+- Coaching Depth:
+- Overall Effectiveness:
 
 "What kind of coach is this person becoming if they continue coaching this way?"
 
