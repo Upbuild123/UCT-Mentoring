@@ -81,6 +81,7 @@ def process_assessment(
         email.send_mentor_notification(
             mentor_email=mentor_row["email"],
             mentor_name=mentor_row["name"],
+            mentor_id=mentor_row["id"],
             student_name=student_row["name"],
             round_num=assessment["round"],
             video_drive_url=video_drive_url,

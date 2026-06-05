@@ -5,6 +5,7 @@ import resend as resend_lib
 def send_mentor_notification(
     mentor_email: str,
     mentor_name: str,
+    mentor_id: int,
     student_name: str,
     round_num: int,
     video_drive_url: str,
@@ -14,6 +15,8 @@ def send_mentor_notification(
 ) -> None:
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
+    app_url = os.environ.get("APP_URL", "http://localhost:8501")
+    dashboard_url = f"{app_url}/Mentor_Dashboard?mentor_id={mentor_id}"
 
     mentor_first = mentor_name.split()[0]
     subject = f"Mentoring Recording. {student_name}. Round {round_num}"
@@ -26,6 +29,7 @@ def send_mentor_notification(
   <li><a href="{ai_review_url}">AI-generated review</a></li>
 </ul>
 <p>After your mentoring meeting, <a href="{mentor_review_url}">submit mentor feedback</a>.</p>
+<p><a href="{dashboard_url}">View your mentor dashboard</a></p>
 """
 
     if not api_key:
