@@ -24,8 +24,8 @@ def send_mentor_notification(
   <li><a href="{video_drive_url}">Video recording</a></li>
   <li><a href="{transcript_url}">Transcript</a></li>
   <li><a href="{ai_review_url}">AI-generated review</a></li>
-  <li><a href="{mentor_review_url}">Submit mentor feedback</a></li>
 </ul>
+<p>After your mentoring meeting, <a href="{mentor_review_url}">submit mentor feedback</a>.</p>
 """
 
     if not api_key:
