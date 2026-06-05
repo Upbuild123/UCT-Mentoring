@@ -8,6 +8,7 @@ from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services import processor
 
 st.set_page_config(page_title="Student Submission", layout="centered")
+st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 st.title("Submit Your Mentoring Recording")
 
 students = db.get_students()
@@ -49,8 +50,8 @@ for comp in COMPETENCIES:
 
 st.subheader("Coach Reflections", anchor=False)
 reflections = {}
-for question in REFLECTION_QUESTIONS:
-    reflections[question] = st.text_area(question, height=80)
+for i, question in enumerate(REFLECTION_QUESTIONS):
+    reflections[question] = st.text_area(question, height=128 if i < 2 else 80)
 
 if st.button("Submit", type="primary"):
     if not video_file:
@@ -82,14 +83,14 @@ if st.button("Submit", type="primary"):
         reflections=json.dumps(reflections),
     )
 
-    progress_bar = st.progress(0.0, text="Starting...")
+    progress_bar = st.progress(0.0, text="Uploading...")
 
     def update_progress(fraction: float, message: str) -> None:
         progress_bar.progress(fraction, text=message)
 
     try:
         processor.process_assessment(assessment["id"], video_path, progress_fn=update_progress)
-        st.success("Mentoring record submitted successfully!")
+        st.success("Mentoring recording submitted successfully!")
         updated = db.get_assessment_by_id(assessment["id"])
         if updated.get("drive_folder_url"):
             st.markdown(f"[View your Drive folder]({updated['drive_folder_url']})")

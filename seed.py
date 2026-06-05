@@ -3,41 +3,31 @@ sys.path.insert(0, ".")
 import db
 
 
+MENTORS = [
+    ("Gina Kellogg", "gina@upbuild.com"),
+    ("Michael Sloyer", "michael@upbuild.com"),
+    ("Mary Kuentz", "mary@upbuild.com"),
+    ("Vipin Goyal", "vipin@upbuild.com"),
+    ("Melissa Arthur", "melissa@upbuild.com"),
+    ("Tzipi Weiss", "tzipi@upbuild.com"),
+]
+
+
 def seed():
     db.init_db()
 
-    mentors_data = [
-        ("Michael", "michael@upbuild.com"),
-        ("Vipin", "vipin@example.com"),
-    ]
+    existing_mentors = {m["email"]: m for m in db.get_mentors()}
 
-    existing_mentors = {m["name"]: m for m in db.get_mentors()}
-    mentor_ids = {}
-
-    for name, email in mentors_data:
-        if name not in existing_mentors:
+    for name, email in MENTORS:
+        if email not in existing_mentors:
             m = db.add_mentor(name, email)
-            mentor_ids[name] = m["id"]
-            print(f"Created mentor: {name} (dashboard_token: {m['dashboard_token']})")
+            print(f"Created mentor: {name} (token: {m['dashboard_token']})")
         else:
-            mentor_ids[name] = existing_mentors[name]["id"]
-            print(f"Mentor already exists: {name}")
-
-    students_data = [
-        ("Student 1", "Michael", "student1@example.com"),
-        ("Student 2", "Vipin", "student2@example.com"),
-    ]
-
-    existing_students = {s["name"]: s for s in db.get_students()}
-
-    for name, mentor_name, email in students_data:
-        if name not in existing_students:
-            s = db.add_student(name, mentor_ids[mentor_name], email)
-            print(f"Created student: {name} (mentor: {mentor_name})")
-        else:
-            print(f"Student already exists: {name}")
+            m = existing_mentors[email]
+            db.update_mentor(m["id"], name, email)
+            print(f"Updated mentor: {name}")
 
 
 if __name__ == "__main__":
     seed()
-    print("Seeding complete.")
+    print("Done.")

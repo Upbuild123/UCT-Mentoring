@@ -138,28 +138,13 @@ Identify 1-5 moments with the greatest transformational potential. For each:
 
 Focus on moments where identity, values, fear, assumptions, tension, purpose, or meaning emerged.
 
-**Overall Assessment**
+**Developmental Opportunities**
 
-Strongest Capabilities:
-- Bullet list
+What are a few possible developmental opportunities for the coach? Identify the most meaningful growth edges — not a repeat of what was said above, but a distillation into the 2-4 opportunities that would most shift this coach's effectiveness.
 
-Primary Growth Areas:
-- Bullet list
+**Development Practices**
 
-Ratings (1-10):
-- Listening:
-- Presence:
-- Curiosity:
-- Following Client Energy:
-- Emotional Depth:
-- Ability to Evoke Insight:
-- Challenge:
-- Coaching Depth:
-- Overall Effectiveness:
-
-"What kind of coach is this person becoming if they continue coaching this way?"
-
-"What is the single biggest thing preventing them from becoming a significantly stronger coach?"
+What are a few possible development practices for the coach? Suggest 2-4 concrete, specific practices the coach could engage in — things they can actually do between sessions to develop the capabilities identified above.
 
 ---
 

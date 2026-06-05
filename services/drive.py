@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2 import service_account
@@ -30,6 +31,20 @@ def _create_folder(service, name: str, parent_id: str) -> str:
     return folder["id"]
 
 
+def _find_folder(service, name: str, parent_id: str) -> Optional[str]:
+    """Return the id of an existing folder with this name under parent_id, or None."""
+    query = (
+        f"name = '{name}' and '{parent_id}' in parents "
+        "and mimeType = 'application/vnd.google-apps.folder' "
+        "and trashed = false"
+    )
+    result = service.files().list(
+        q=query, fields="files(id)", supportsAllDrives=True, includeItemsFromAllDrives=True
+    ).execute()
+    files = result.get("files", [])
+    return files[0]["id"] if files else None
+
+
 def _get_web_link(service, file_id: str) -> str:
     file = service.files().get(
         fileId=file_id, fields="webViewLink", supportsAllDrives=True
@@ -37,11 +52,36 @@ def _get_web_link(service, file_id: str) -> str:
     return file["webViewLink"]
 
 
-def create_student_round_folder(student_name: str, round_num: int):
-    """Create nested folders: parent/<student_name>/Round <round_num>. Returns (folder_id, folder_url)."""
+def _share_folder(service, folder_id: str, email: str, role: str = "reader") -> None:
+    """Share a folder with a specific email address."""
+    service.permissions().create(
+        fileId=folder_id,
+        body={"type": "user", "role": role, "emailAddress": email},
+        supportsAllDrives=True,
+        sendNotificationEmail=False,
+    ).execute()
+
+
+def create_student_round_folder(student_name: str, round_num: int, student_email: str = ""):
+    """
+    Get or create: parent/<student_name>/Round <round_num>.
+    If the student folder is newly created and student_email is provided,
+    shares it with the student (viewer access).
+    Returns (round_folder_id, round_folder_url).
+    """
     service = _get_service()
     parent_id = os.environ["GOOGLE_DRIVE_PARENT_FOLDER_ID"]
-    student_folder_id = _create_folder(service, student_name, parent_id)
+
+    # Reuse existing student folder if it exists
+    student_folder_id = _find_folder(service, student_name, parent_id)
+    newly_created = student_folder_id is None
+    if newly_created:
+        student_folder_id = _create_folder(service, student_name, parent_id)
+
+    # Share the student folder with the student on first creation
+    if newly_created and student_email:
+        _share_folder(service, student_folder_id, student_email, role="writer")
+
     round_folder_id = _create_folder(service, f"Round {round_num}", student_folder_id)
     folder_url = _get_web_link(service, round_folder_id)
     return round_folder_id, folder_url

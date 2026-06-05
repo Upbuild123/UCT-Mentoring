@@ -61,6 +61,17 @@ def generate_pdf(
     pdf.ln(4)
 
     heading("Mentor Feedback")
-    body(mentor_feedback or "(no mentor feedback)")
+    try:
+        feedback_answers = json.loads(mentor_feedback) if mentor_feedback else {}
+    except (json.JSONDecodeError, TypeError):
+        feedback_answers = {}
+    if feedback_answers and isinstance(feedback_answers, dict):
+        for question, answer in feedback_answers.items():
+            pdf.set_font("Helvetica", style="B", size=11)
+            pdf.multi_cell(0, 7, question)
+            pdf.set_x(pdf.l_margin)
+            body(answer or "(no answer)")
+    else:
+        body(mentor_feedback or "(no mentor feedback)")
 
     pdf.output(output_path)

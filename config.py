@@ -1,8 +1,8 @@
 RATING_OPTIONS = [
-    "Not Demonstrated",
-    "Emerging",
-    "Competent",
-    "Exceptional",
+    "1. Not Demonstrated",
+    "2. Emerging",
+    "3. Competent",
+    "4. Exceptional",
 ]
 
 COMPETENCIES = [

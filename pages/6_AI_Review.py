@@ -5,6 +5,7 @@ import streamlit as st
 import db
 
 st.set_page_config(page_title="AI Coaching Review", layout="centered")
+st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 
 # Reduce heading sizes to match body text — professional document style
 st.markdown("""

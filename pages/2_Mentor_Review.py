@@ -7,6 +7,7 @@ from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services.processor import generate_and_send_pdf
 
 st.set_page_config(page_title="Mentor Review", layout="wide")
+st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 st.title("Mentor Review")
 
 params = st.query_params
@@ -28,17 +29,30 @@ if not assessment:
     st.stop()
 
 student = db.get_student_by_id(assessment["student_id"])
-ai_review = db.get_ai_review(assessment_id)
 existing_feedback = db.get_mentor_feedback(assessment_id)
 
 existing_mentor_ratings = json.loads(existing_feedback.get("mentor_ratings") or "{}") if existing_feedback else {}
+
+MENTOR_QUESTIONS = [
+    "What did the coach do well in this coaching session?",
+    "What opportunities were there to strengthen this coaching session?",
+    "What are the developmental opportunities for the coach?",
+    "What are 1-2 development practices for the coach?",
+]
+
+existing_answers = {}
+if existing_feedback and existing_feedback.get("feedback_text"):
+    try:
+        existing_answers = json.loads(existing_feedback["feedback_text"])
+    except (json.JSONDecodeError, TypeError):
+        pass
 
 st.subheader(f"Coach: {student['name']} -- Round {assessment['round']}", anchor=False)
 st.caption(f"Submitted: {assessment.get('submitted_at', 'N/A')} | Status: {assessment['status']}")
 
 # --- Competency ratings comparison ---
 st.divider()
-st.markdown("### Self-Assessment Ratings")
+st.markdown("### Mentor Assessment Ratings")
 coach_ratings = json.loads(assessment.get("competency_ratings") or "{}")
 
 mentor_ratings = {}
@@ -46,9 +60,11 @@ current_category = None
 for comp in COMPETENCIES:
     if comp["category"] != current_category:
         current_category = comp["category"]
-        st.markdown(f"<p style='font-size:14px; font-weight:600; margin:10px 0 4px 0;'>{current_category}</p>", unsafe_allow_html=True)
+        col_hdr, _ = st.columns([6, 5])
+        with col_hdr:
+            st.markdown(f"<p style='font-size:17px; font-weight:700; margin:14px 0 4px 0;'>{current_category}</p>", unsafe_allow_html=True)
 
-    col_name, col_coach, col_mentor = st.columns([3, 2, 2])
+    col_name, col_coach, col_mentor, _ = st.columns([3, 2, 2, 4])
     with col_name:
         st.markdown(f"<p style='margin:6px 0 0 0; font-size:13px; font-weight:600;'>{comp['name']}</p>", unsafe_allow_html=True)
     with col_coach:
@@ -65,8 +81,6 @@ for comp in COMPETENCIES:
             key=f"mentor_rating_{comp['name']}",
         )
 
-# --- Column headers for ratings ---
-st.caption("Left column: coach self-rating. Right column: your rating.")
 
 # --- Reflections ---
 st.divider()
@@ -77,37 +91,29 @@ for question in REFLECTION_QUESTIONS:
     st.markdown(f"**{question}**")
     st.write(answer)
 
-# --- Transcript ---
-st.divider()
-st.markdown("### Session Transcript")
-transcript = assessment.get("transcript") or "(transcript not yet available)"
-st.text_area("Transcript", value=transcript, height=200, disabled=True, label_visibility="collapsed")
-
-# --- AI Review (mentor only) ---
-if ai_review:
-    st.divider()
-    st.markdown("### AI Review")
-    st.info(ai_review["content"])
-
 # --- Mentor feedback ---
 st.divider()
-st.markdown("### Your Feedback")
-feedback_text = st.text_area(
-    "Write your feedback for the coach",
-    value=existing_feedback["feedback_text"] if existing_feedback else "",
-    height=200,
-)
+st.markdown("### Mentor Reflections")
+mentor_answers = {}
+for i, question in enumerate(MENTOR_QUESTIONS):
+    mentor_answers[question] = st.text_area(
+        question,
+        value=existing_answers.get(question, ""),
+        height=192 if i < 2 else 120,
+        key=f"mentor_q_{i}",
+    )
 
-if st.button("Save Feedback", type="primary"):
-    if not feedback_text.strip():
-        st.error("Please write feedback before saving.")
+if st.button("Submit Feedback", type="primary"):
+    empty_answers = [q for q in MENTOR_QUESTIONS if not mentor_answers[q].strip()]
+    if empty_answers:
+        st.warning(f"Please answer all questions. Missing: {', '.join(empty_answers)}")
     else:
         unrated = [comp["name"] for comp in COMPETENCIES if mentor_ratings.get(comp["name"]) == "-- select --"]
         if unrated:
             st.warning(f"Please complete all mentor ratings. Missing: {', '.join(unrated)}")
         else:
             clean_mentor_ratings = {k: v for k, v in mentor_ratings.items() if v != "-- select --"}
-            db.save_mentor_feedback(assessment_id, feedback_text.strip(), json.dumps(clean_mentor_ratings))
+            db.save_mentor_feedback(assessment_id, json.dumps(mentor_answers), json.dumps(clean_mentor_ratings))
             with st.spinner("Generating assessment PDF and sending to both parties..."):
                 try:
                     pdf_url = generate_and_send_pdf(assessment_id)

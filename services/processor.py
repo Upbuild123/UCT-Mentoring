@@ -24,9 +24,9 @@ def process_assessment(
         mentor_row = db.get_mentor_by_id(student_row["mentor_id"])
         base_name = f"Mentoring Round {assessment['round']}. {student_row['name']}"
 
-        _progress(0.0, "Uploading video to Google Drive...")
+        _progress(0.0, "Uploading...")
         folder_id, folder_url = drive.create_student_round_folder(
-            student_row["name"], assessment["round"]
+            student_row["name"], assessment["round"], student_email=student_row.get("email") or ""
         )
         video_drive_url = drive.upload_file(
             video_path, folder_id, f"{base_name}. Recording.mp4"
@@ -38,11 +38,11 @@ def process_assessment(
             video_drive_url=video_drive_url,
         )
 
-        _progress(0.25, "Extracting audio...")
+        _progress(0.25, "Uploading...")
         audio_path = video_path.rsplit(".", 1)[0] + ".mp3"
         openai_service.extract_audio(video_path, audio_path)
 
-        _progress(0.40, "Transcribing audio...")
+        _progress(0.40, "Uploading...")
         transcript = openai_service.transcribe(audio_path)
 
         for path in (audio_path, video_path):
@@ -51,12 +51,17 @@ def process_assessment(
             except FileNotFoundError:
                 pass
 
-        _progress(0.50, "Uploading transcript to Drive...")
-        transcript_path = f"uploads/transcript_{assessment_id}.txt"
+        _progress(0.50, "Uploading...")
+        from docx import Document
+        from io import BytesIO
+        transcript_path = f"uploads/transcript_{assessment_id}.docx"
         os.makedirs("uploads", exist_ok=True)
-        with open(transcript_path, "w", encoding="utf-8") as f:
-            f.write(transcript)
-        drive.upload_file(transcript_path, folder_id, f"{base_name}. Transcript.txt")
+        doc = Document()
+        doc.add_heading(f"{base_name}. Transcript", 0)
+        for line in transcript.split("\n"):
+            doc.add_paragraph(line)
+        doc.save(transcript_path)
+        drive.upload_file(transcript_path, folder_id, f"{base_name}. Transcript.docx")
         try:
             os.remove(transcript_path)
         except FileNotFoundError:
@@ -64,11 +69,11 @@ def process_assessment(
 
         db.update_assessment(assessment_id, transcript=transcript)
 
-        _progress(0.65, "Generating AI review...")
+        _progress(0.65, "Uploading...")
         ai_review_content = openai_service.generate_ai_review(assessment, transcript)
         db.save_ai_review(assessment_id, ai_review_content)
 
-        _progress(0.90, "Sending mentor notification...")
+        _progress(0.90, "Uploading...")
         app_url = os.environ.get("APP_URL", "http://localhost:8501")
         transcript_url = f"{app_url}/Transcript?assessment_id={assessment_id}"
         ai_review_url = f"{app_url}/AI_Review?assessment_id={assessment_id}"
@@ -84,8 +89,16 @@ def process_assessment(
             mentor_review_url=mentor_review_url,
         )
 
+        if student_row.get("email"):
+            email.send_student_confirmation(
+                student_email=student_row["email"],
+                student_name=student_row["name"],
+                round_num=assessment["round"],
+                drive_folder_url=folder_url,
+            )
+
         db.update_assessment(assessment_id, status="complete", error_message=None)
-        _progress(1.0, "Complete!")
+        _progress(1.0, "Uploading...")
 
     except Exception as exc:
         db.update_assessment(assessment_id, status="error", error_message=str(exc))

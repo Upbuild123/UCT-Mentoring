@@ -7,6 +7,16 @@ from services import processor
 from services.openai_service import generate_ai_review
 
 st.set_page_config(page_title="Admin", layout="wide")
+st.markdown("<style>[data-testid='stSidebarNav'] li:not(:nth-child(4)) {display: none;}</style>", unsafe_allow_html=True)
+
+admin_password = os.environ.get("ADMIN_PASSWORD", "")
+if admin_password:
+    entered = st.text_input("Admin password", type="password")
+    if entered != admin_password:
+        if entered:
+            st.error("Incorrect password.")
+        st.stop()
+
 st.title("Admin Dashboard")
 
 tab_assessments, tab_mentors, tab_students = st.tabs(["Assessments", "Mentors", "Students"])
@@ -120,9 +130,12 @@ with tab_students:
                 default_idx = mentor_names.index(current_mentor_name) if current_mentor_name in mentor_names else 0
                 new_mentor_name = st.selectbox("Mentor", mentor_names, index=default_idx)
                 if st.form_submit_button("Save"):
-                    db.update_student(s["id"], new_name.strip(), mentor_options[new_mentor_name], new_email.strip())
-                    st.success("Saved.")
-                    st.rerun()
+                    if not new_email.strip():
+                        st.error("Email is required.")
+                    else:
+                        db.update_student(s["id"], new_name.strip(), mentor_options[new_mentor_name], new_email.strip())
+                        st.success("Saved.")
+                        st.rerun()
 
     st.divider()
     st.markdown("#### Add Student")
@@ -131,9 +144,11 @@ with tab_students:
         new_student_email = st.text_input("Email")
         mentor_name = st.selectbox("Mentor", list(mentor_options.keys()))
         if st.form_submit_button("Add Student"):
-            if name.strip():
+            if not name.strip():
+                st.error("Name is required.")
+            elif not new_student_email.strip():
+                st.error("Email is required.")
+            else:
                 db.add_student(name.strip(), mentor_options[mentor_name], new_student_email.strip())
                 st.success(f"Student {name} added.")
                 st.rerun()
-            else:
-                st.error("Name is required.")
