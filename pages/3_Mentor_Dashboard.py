@@ -70,11 +70,14 @@ for student in sorted(mentor_students, key=lambda s: s["name"]):
                 status_color = {"complete": "green", "error": "red", "processing": "orange"}.get(a["status"], "gray")
                 review_url = f"{app_url}/Mentor_Review?assessment_id={a['id']}"
 
+                feedback = db.get_mentor_feedback(a["id"])
+                feedback_status = ":green[Feedback submitted]" if feedback else ":orange[Awaiting your feedback]"
+
                 col1, col2, col3 = st.columns([2, 2, 3])
                 with col1:
                     st.markdown(f"**Round {a['round']}** — {date_str}")
                 with col2:
-                    st.markdown(f":{status_color}[{a['status'].upper()}]")
+                    st.markdown(feedback_status)
                 with col3:
                     st.markdown(f"[Review]({review_url})")
                     if a.get("drive_folder_url"):
