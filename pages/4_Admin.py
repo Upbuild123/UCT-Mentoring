@@ -6,8 +6,6 @@ import db
 from services import processor
 from services.openai_service import generate_ai_review
 
-st.set_page_config(page_title="Admin", layout="wide")
-st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 
 admin_password = os.environ.get("ADMIN_PASSWORD", "")
 if admin_password:

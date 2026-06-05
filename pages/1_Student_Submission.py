@@ -7,8 +7,6 @@ import db
 from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services import processor
 
-st.set_page_config(page_title="Student Submission", layout="centered")
-st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 st.title("Submit Your Mentoring Recording")
 
 students = db.get_students()

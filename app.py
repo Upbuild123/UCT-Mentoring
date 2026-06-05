@@ -11,6 +11,18 @@ seed.seed()
 
 import streamlit as st
 
-st.set_page_config(page_title="Upbuild Mentoring", layout="centered")
-st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
-st.title("Welcome to Upbuild Mentoring")
+st.set_page_config(page_title="Upbuild Mentoring", layout="wide")
+
+pg = st.navigation(
+    [
+        st.Page("pages/home.py", title="Home", default=True),
+        st.Page("pages/1_Student_Submission.py", title="Student Submission"),
+        st.Page("pages/2_Mentor_Review.py", title="Mentor Review"),
+        st.Page("pages/3_Mentor_Dashboard.py", title="Mentor Dashboard"),
+        st.Page("pages/4_Admin.py", title="Admin"),
+        st.Page("pages/5_Transcript.py", title="Transcript"),
+        st.Page("pages/6_AI_Review.py", title="AI Review"),
+    ],
+    position="hidden",
+)
+pg.run()
