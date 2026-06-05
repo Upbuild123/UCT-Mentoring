@@ -138,6 +138,37 @@ with tab_students:
                         st.rerun()
 
     st.divider()
+    st.markdown("#### Bulk Import Students")
+    st.caption("Copy 3 columns from Google Sheets (Name, Email, Mentor) and paste below.")
+    bulk_data = st.text_area("Paste rows here", height=150, placeholder="Jane Smith\tjane@email.com\tMichael Sloyer\nJohn Doe\tjohn@email.com\tGina Kellogg")
+    if st.button("Import Students"):
+        if not bulk_data.strip():
+            st.error("Nothing to import.")
+        else:
+            added, skipped = [], []
+            for i, line in enumerate(bulk_data.strip().splitlines(), 1):
+                parts = [p.strip() for p in line.split("\t")]
+                if len(parts) != 3:
+                    skipped.append(f"Row {i}: expected 3 columns, got {len(parts)}")
+                    continue
+                s_name, s_email, s_mentor = parts
+                if not s_name or not s_email:
+                    skipped.append(f"Row {i}: name and email are required")
+                    continue
+                if s_mentor not in mentor_options:
+                    skipped.append(f"Row {i}: mentor '{s_mentor}' not found")
+                    continue
+                db.add_student(s_name, mentor_options[s_mentor], s_email)
+                added.append(s_name)
+            if added:
+                st.success(f"Imported {len(added)} student(s): {', '.join(added)}")
+            if skipped:
+                for msg in skipped:
+                    st.warning(msg)
+            if added:
+                st.rerun()
+
+    st.divider()
     st.markdown("#### Add Student")
     with st.form("add_student_form"):
         name = st.text_input("Name")
