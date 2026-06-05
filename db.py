@@ -3,7 +3,17 @@ import secrets
 from contextlib import contextmanager
 from typing import Optional
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "data/mentoring.db")
+def _get_database_url() -> str:
+    # Allow assembling from parts if full URL has TOML escaping issues
+    host = os.environ.get("DB_HOST")
+    if host:
+        user = os.environ.get("DB_USER", "")
+        password = os.environ.get("DB_PASSWORD", "")
+        name = os.environ.get("DB_NAME", "neondb")
+        return f"postgresql://{user}:{password}@{host}/{name}?sslmode=require"
+    return os.environ.get("DATABASE_URL", "data/mentoring.db")
+
+DATABASE_URL = _get_database_url()
 _IS_POSTGRES = DATABASE_URL.startswith(("postgresql://", "postgres://"))
 _PH = "%s" if _IS_POSTGRES else "?"  # query placeholder
 
