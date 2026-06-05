@@ -33,7 +33,7 @@ if not mentor:
     st.error("Mentor not found.")
     st.stop()
 
-st.subheader(f"Welcome, {mentor['name'].split()[0]}")
+st.subheader(f"Welcome, {mentor['name'].split()[0]}", anchor=False)
 
 assessments = db.get_assessments_by_mentor(mentor_id)
 app_url = os.environ.get("APP_URL", "http://localhost:8501")
