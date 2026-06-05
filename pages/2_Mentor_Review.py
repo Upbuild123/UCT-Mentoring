@@ -6,6 +6,8 @@ import db
 from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
 from services.processor import generate_and_send_pdf
 
+st.set_page_config(page_title="Mentor Review", layout="wide")
+st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 st.title("Mentor Review")
 
 params = st.query_params

@@ -4,6 +4,8 @@ from io import BytesIO
 import streamlit as st
 import db
 
+st.set_page_config(page_title="Session Transcript", layout="centered")
+st.markdown("<style>[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 st.title("Session Transcript")
 
 params = st.query_params
