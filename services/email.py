@@ -19,7 +19,7 @@ def send_mentor_notification(
     subject = f"Mentoring Recording. {student_name}. Round {round_num}"
     html = f"""
 <p>Hi {mentor_first},</p>
-<p>There is a new mentoring recording to review.</p>
+<p>There is a new mentoring recording to review from {student_name.split()[0]}.</p>
 <ul>
   <li><a href="{video_drive_url}">Video recording</a></li>
   <li><a href="{transcript_url}">Transcript</a></li>
