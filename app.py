@@ -6,6 +6,10 @@ load_dotenv()
 import db
 db.init_db()
 
+# Seed default mentors if none exist
+import seed
+seed.seed()
+
 import streamlit as st
 
 st.set_page_config(page_title="Mentoring Assessment", layout="centered")
