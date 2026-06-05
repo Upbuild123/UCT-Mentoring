@@ -52,10 +52,9 @@ for a in assessments:
 
 for student in sorted(mentor_students, key=lambda s: s["name"]):
     student_assessments = sorted(assessments_by_student.get(student["id"], []), key=lambda a: a["round"])
-    rounds_complete = len([a for a in student_assessments if a["status"] == "complete"])
-    rounds_total = len(student_assessments)
+    unique_rounds = len(set(a["round"] for a in student_assessments))
 
-    label = f"{student['name']}  —  {rounds_total} round{'s' if rounds_total != 1 else ''} submitted"
+    label = f"{student['name']}  —  {unique_rounds} round{'s' if unique_rounds != 1 else ''} submitted"
 
     with st.expander(label):
         if not student_assessments:

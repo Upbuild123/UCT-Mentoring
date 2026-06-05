@@ -198,10 +198,10 @@ with tab_overview:
     all_students = db.get_students()
     all_assessments = db.get_all_assessments()
 
-    # Build a map of student_id -> list of rounds submitted
+    # Build a map of student_id -> unique rounds submitted
     rounds_by_student = {}
     for a in all_assessments:
-        rounds_by_student.setdefault(a["student_id"], []).append(a["round"])
+        rounds_by_student.setdefault(a["student_id"], set()).add(a["round"])
 
     mentor_map_overview = {m["id"]: m["name"] for m in db.get_mentors()}
 
@@ -215,7 +215,7 @@ with tab_overview:
         col_total.markdown("**Total**")
         st.divider()
         for s in sorted(all_students, key=lambda x: x["name"]):
-            rounds = sorted(rounds_by_student.get(s["id"], []))
+            rounds = sorted(rounds_by_student.get(s["id"], set()))
             mentor_name = mentor_map_overview.get(s["mentor_id"], "—")
             col_name, col_mentor, col_rounds, col_total = st.columns([3, 3, 4, 1])
             col_name.write(s["name"])
