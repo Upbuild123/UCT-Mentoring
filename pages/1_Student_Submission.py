@@ -63,9 +63,10 @@ if st.button("Submit", type="primary"):
         st.warning(f"Please rate all competencies. Missing: {', '.join(unrated)}")
         st.stop()
 
-    empty_reflections = [q for q in REFLECTION_QUESTIONS if not reflections[q].strip()]
+    mandatory_questions = REFLECTION_QUESTIONS[:-2]
+    empty_reflections = [q for q in mandatory_questions if not reflections[q].strip()]
     if empty_reflections:
-        st.warning(f"Please answer all reflection questions. Missing: {', '.join(empty_reflections)}")
+        st.warning(f"Please answer all required reflection questions. Missing: {', '.join(empty_reflections)}")
         st.stop()
 
     # Strip placeholder from saved ratings
