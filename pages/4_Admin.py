@@ -88,6 +88,14 @@ with tab_mentors:
     mentors = db.get_mentors()
     for m in mentors:
         with st.expander(f"{m['name']} -- {m['email']}"):
+            mentor_students = [s for s in db.get_students() if s["mentor_id"] == m["id"]]
+            if mentor_students:
+                st.markdown("**Students**")
+                for s in mentor_students:
+                    st.caption(f"• {s['name']} ({s.get('email') or 'no email'})")
+            else:
+                st.caption("No students assigned.")
+            st.divider()
             with st.form(key=f"mentor_form_{m['id']}"):
                 new_name = st.text_input("Name", value=m["name"])
                 new_email = st.text_input("Email", value=m["email"])
