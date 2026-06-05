@@ -138,13 +138,50 @@ Identify 1-5 moments with the greatest transformational potential. For each:
 
 Focus on moments where identity, values, fear, assumptions, tension, purpose, or meaning emerged.
 
-**Developmental Opportunities**
+**Developmental Opportunities and Practices**
 
-What are a few possible developmental opportunities for the coach? Identify the most meaningful growth edges — not a repeat of what was said above, but a distillation into the 2-4 opportunities that would most shift this coach's effectiveness.
+Identify 1-3 specific coaching behaviors that would most improve this coach's effectiveness based on what occurred in this session.
 
-**Development Practices**
+Do NOT recommend books, workshops, courses, certifications, supervision, reflective practice, or other generic professional development activities unless there is a clear and significant knowledge gap.
 
-What are a few possible development practices for the coach? Suggest 2-4 concrete, specific practices the coach could engage in — things they can actually do between sessions to develop the capabilities identified above.
+Each developmental opportunity must:
+- Be directly tied to a specific observation from this session
+- Focus on a coaching behavior, not coaching knowledge
+- Be actionable in the coach's very next session
+- Be phrased as a developmental practice, not an educational recommendation
+- Prioritize high-leverage coaching fundamentals over advanced techniques
+- Use concepts from the Upbuild methodology when relevant
+
+Common developmental areas to draw from (use only what applies):
+- Clarifying the presenting agenda before moving deeper
+- Distinguishing between the presenting, deeper, and transformational agendas
+- Coaching the person rather than the problem
+- Exploring beliefs, assumptions, fears, desires, and patterns beneath the client's situation
+- Following energy and emotional material more consistently
+- Staying with important moments longer before moving on
+- Using more curiosity and fewer leading questions
+- Trusting silence
+- Listening for what is emerging in the client
+- Coaching toward awareness before action
+- Taking more risks in service of the client
+- Challenging assumptions compassionately
+- Naming patterns and observations in real time
+- Spending less time brainstorming and problem solving
+
+Avoid vague language like "read more about...", "attend a workshop...", "study questioning techniques...", "develop your coaching skills...", or "practice reflective learning..."
+
+For each developmental opportunity use this format:
+
+*[Development Opportunity Title]*
+
+Observation:
+[What specifically happened in the session.]
+
+Why It Matters:
+[Why this limits coaching effectiveness.]
+
+Developmental Practice:
+[A concrete, specific practice the coach can implement in their next session — phrased as an action, not a recommendation to study or learn.]
 
 ---
 
