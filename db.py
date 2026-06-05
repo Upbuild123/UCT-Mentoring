@@ -250,6 +250,14 @@ def update_assessment(assessment_id: int, **fields) -> None:
         )
 
 
+def get_assessments_by_student(student_id: int) -> list:
+    with _conn() as con:
+        return _fetchall(con,
+            f"SELECT * FROM assessments WHERE student_id = {_PH} ORDER BY round",
+            (student_id,),
+        )
+
+
 def get_assessments_by_mentor(mentor_id: int) -> list:
     with _conn() as con:
         return _fetchall(con,

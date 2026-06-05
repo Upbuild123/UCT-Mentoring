@@ -19,7 +19,7 @@ if admin_password:
 
 st.title("Admin Dashboard")
 
-tab_assessments, tab_mentors, tab_students = st.tabs(["Assessments", "Mentors", "Students"])
+tab_assessments, tab_mentors, tab_students, tab_overview = st.tabs(["Assessments", "Mentors", "Students", "Student Overview"])
 
 app_url = os.environ.get("APP_URL", "http://localhost:8501")
 
@@ -191,3 +191,34 @@ with tab_students:
                 db.add_student(name.strip(), mentor_options[mentor_name], new_student_email.strip())
                 st.success(f"Student {name} added.")
                 st.rerun()
+
+# --- Student Overview Tab ---
+with tab_overview:
+    st.subheader("Student Submissions Overview")
+    all_students = db.get_students()
+    all_assessments = db.get_all_assessments()
+
+    # Build a map of student_id -> list of rounds submitted
+    rounds_by_student = {}
+    for a in all_assessments:
+        rounds_by_student.setdefault(a["student_id"], []).append(a["round"])
+
+    mentor_map_overview = {m["id"]: m["name"] for m in db.get_mentors()}
+
+    if not all_students:
+        st.info("No students yet.")
+    else:
+        col_name, col_mentor, col_rounds, col_total = st.columns([3, 3, 4, 1])
+        col_name.markdown("**Student**")
+        col_mentor.markdown("**Mentor**")
+        col_rounds.markdown("**Rounds Submitted**")
+        col_total.markdown("**Total**")
+        st.divider()
+        for s in sorted(all_students, key=lambda x: x["name"]):
+            rounds = sorted(rounds_by_student.get(s["id"], []))
+            mentor_name = mentor_map_overview.get(s["mentor_id"], "—")
+            col_name, col_mentor, col_rounds, col_total = st.columns([3, 3, 4, 1])
+            col_name.write(s["name"])
+            col_mentor.write(mentor_name)
+            col_rounds.write(", ".join(f"Round {r}" for r in rounds) if rounds else "—")
+            col_total.write(str(len(rounds)) if rounds else "0")

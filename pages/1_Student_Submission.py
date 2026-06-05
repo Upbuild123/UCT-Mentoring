@@ -53,7 +53,18 @@ reflections = {}
 for i, question in enumerate(REFLECTION_QUESTIONS):
     reflections[question] = st.text_area(question, height=128 if i < 2 else 80)
 
-if st.button("Submit", type="primary"):
+existing_rounds = [a["round"] for a in db.get_assessments_by_student(student_id)]
+duplicate_warning = int(round_num) in existing_rounds
+
+if duplicate_warning and not st.session_state.get("confirm_duplicate"):
+    st.warning(f"⚠️ You have already submitted Round {round_num}. Are you sure you want to submit again?")
+    if st.button("Yes, submit anyway", type="primary"):
+        st.session_state["confirm_duplicate"] = True
+        st.rerun()
+    st.stop()
+
+if st.button("Submit", type="primary") or st.session_state.get("confirm_duplicate"):
+    st.session_state.pop("confirm_duplicate", None)
     if not video_file:
         st.error("Please upload a video recording before submitting.")
         st.stop()
