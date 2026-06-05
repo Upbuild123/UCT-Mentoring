@@ -50,14 +50,12 @@ def send_student_confirmation(
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
 
+    first_name = student_name.split()[0]
     subject = f"Your Round {round_num} Recording Has Been Received"
     html = f"""
-<p>Hi {student_name},</p>
-<p>Your Round {round_num} mentoring recording has been successfully uploaded. Your mentor has been notified and will review it shortly.</p>
-<p>You can access your recording and transcript in your Google Drive folder:</p>
-<ul>
-  <li><a href="{drive_folder_url}">View your Drive folder</a></li>
-</ul>
+<p>Hi {first_name},</p>
+<p>Your Round {round_num} mentoring recording has been successfully uploaded, and your mentor has been notified.</p>
+<p>You can access your recording and transcript in your Google Drive <a href="{drive_folder_url}">folder</a>.</p>
 """
 
     if not api_key:
