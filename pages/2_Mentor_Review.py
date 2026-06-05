@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, ".")
 import json
+from datetime import datetime
 import streamlit as st
 import db
 from config import COMPETENCIES, REFLECTION_QUESTIONS, RATING_OPTIONS
@@ -47,8 +48,15 @@ if existing_feedback and existing_feedback.get("feedback_text"):
     except (json.JSONDecodeError, TypeError):
         pass
 
+try:
+    submitted_str = str(assessment.get('submitted_at', ''))
+    submitted_date = datetime.fromisoformat(submitted_str).strftime("%-d %B").lstrip("0")
+    submitted_label = f"Submitted on {datetime.fromisoformat(submitted_str).strftime('%B %-d')}"
+except Exception:
+    submitted_label = "Submitted on N/A"
+
 st.subheader(f"Coach: {student['name']} -- Round {assessment['round']}", anchor=False)
-st.caption(f"Submitted: {assessment.get('submitted_at', 'N/A')} | Status: {assessment['status']}")
+st.caption(submitted_label)
 
 # --- Competency ratings comparison ---
 st.divider()
@@ -122,7 +130,3 @@ if st.button("Submit Feedback", type="primary"):
                 except Exception as e:
                     st.warning(f"Feedback saved, but PDF generation failed: {e}")
 
-if assessment.get("drive_folder_url"):
-    st.markdown(f"[Open Drive Folder]({assessment['drive_folder_url']})")
-if assessment.get("pdf_drive_url"):
-    st.markdown(f"[View Assessment PDF]({assessment['pdf_drive_url']})")
