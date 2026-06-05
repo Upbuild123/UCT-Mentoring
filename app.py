@@ -11,7 +11,7 @@ seed.seed()
 
 import streamlit as st
 
-st.set_page_config(page_title="Mentoring Assessment", layout="centered")
+st.set_page_config(page_title="Mentoring Assessment", layout="wide")
 
 pg = st.navigation(
     [
