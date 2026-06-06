@@ -4,7 +4,7 @@ __pycache__/
 .env
 .DS_Store
 .pytest_cache/
-.streamlit/
+.streamlit/secrets.toml
 uploads/*.mp4
 uploads/*.mov
 uploads/*.webm
