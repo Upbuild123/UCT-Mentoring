@@ -34,7 +34,7 @@ for comp in COMPETENCIES:
         current_category = comp["category"]
         st.markdown(f"<p style='font-size:15px; font-weight:600; margin:8px 0 4px 0;'>{current_category}</p>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns([3, 2])
+    col1, col2 = st.columns([4, 1])
     with col1:
         st.markdown(f"<p style='margin:0; font-size:13px; font-weight:600;'>{comp['name']}</p>", unsafe_allow_html=True)
         st.caption(comp["description"])
