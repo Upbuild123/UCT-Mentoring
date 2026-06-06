@@ -125,7 +125,8 @@ def generate_and_send_pdf(assessment_id: int) -> str:
     pdf.generate_pdf(
         assessment=assessment,
         student_name=student_row["name"],
-        transcript=assessment.get("transcript") or "",
+        mentor_name=mentor_row["name"] if mentor_row else "",
+        transcript="",
         mentor_feedback=feedback["feedback_text"] if feedback else "",
         mentor_ratings=mentor_ratings,
         output_path=pdf_path,
