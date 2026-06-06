@@ -87,13 +87,12 @@ def send_completion_notification(
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
 
-    subject = f"Your Round {round_num} Assessment is Ready - {student_name}"
+    first_name = student_name.split()[0]
+    subject = f"Your UCT Mentoring Round {round_num} Assessment is Ready"
     html = f"""
-<h2>Mentoring Assessment Complete</h2>
-<p>The Round {round_num} assessment for <strong>{student_name}</strong> is now complete.</p>
-<ul>
-  <li><a href="{pdf_drive_url}">View Assessment PDF</a></li>
-</ul>
+<p>Hi {first_name},</p>
+<p>Your Round {round_num} assessment PDF is now complete and available to view.</p>
+<p><a href="{pdf_drive_url}">Round {round_num} assessment PDF</a></p>
 """
 
     if not api_key:
