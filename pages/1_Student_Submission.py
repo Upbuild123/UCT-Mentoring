@@ -15,15 +15,19 @@ if not students:
     st.stop()
 
 student_map = {s["name"]: s["id"] for s in students}
-selected_name = st.selectbox("Your name", list(student_map.keys()))
+col_name, _ = st.columns([1, 2])
+with col_name:
+    selected_name = st.selectbox("Your name", list(student_map.keys()))
 student_id = student_map[selected_name]
 
 round_num = st.radio("Round number", options=[1, 2, 3, 4], horizontal=True)
 
 st.subheader("Video Recording", anchor=False)
-video_file = st.file_uploader(
-    "Upload your session recording", type=["mp4", "mov", "webm", "avi"]
-)
+col_upload, _ = st.columns([1, 2])
+with col_upload:
+    video_file = st.file_uploader(
+        "Upload your session recording", type=["mp4", "mov", "webm", "avi"]
+    )
 
 st.subheader("Coach Self-Assessment Ratings", anchor=False)
 
