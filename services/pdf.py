@@ -6,7 +6,7 @@ from fpdf import FPDF
 from config import COMPETENCIES, RATING_OPTIONS
 
 # Upbuild purple
-PURPLE = (94, 53, 177)
+PURPLE = (94, 50, 140)
 LIGHT_PURPLE = (237, 231, 246)
 DARK_TEXT = (30, 30, 30)
 GRAY = (120, 120, 120)
@@ -55,7 +55,7 @@ def generate_pdf(
         logo_file = _tmp_logo.name
 
     # Logo in top-right (white background — logo has transparent/white bg)
-    logo_h = 14
+    logo_h = 11
     logo_w = logo_h * 4.2  # preserve ~4.2:1 aspect ratio of the Upbuild logo
     pdf.image(logo_file, x=pdf.w - pdf.r_margin - logo_w, y=6, h=logo_h)
 
