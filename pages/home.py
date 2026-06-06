@@ -11,7 +11,3 @@ if os.path.exists(logo_path):
     )
 
 st.title("Welcome to Upbuild Mentoring")
-st.markdown(
-    "<p style='font-size:17px; color:#7a5fa0; margin-top:-8px;'>Coaching assessment and development program</p>",
-    unsafe_allow_html=True,
-)
