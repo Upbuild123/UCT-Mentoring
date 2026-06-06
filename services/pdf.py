@@ -45,11 +45,7 @@ def generate_pdf(
 
     page_w = pdf.w - pdf.l_margin - pdf.r_margin
 
-    # ── Header bar ──────────────────────────────────────────────────────────
-    pdf.set_fill_color(*PURPLE)
-    pdf.rect(0, 0, pdf.w, 28, style="F")
-
-    # Logo in top-right of header
+    # ── Header: logo top-right on white, purple accent bar below ────────────
     logo_file = logo_path or os.path.join(os.path.dirname(__file__), "..", "assets", "upbuild_logo.png")
     _tmp_logo = None
     if not os.path.exists(logo_file):
@@ -58,7 +54,10 @@ def generate_pdf(
         _make_logo_png(_tmp_logo.name)
         logo_file = _tmp_logo.name
 
-    pdf.image(logo_file, x=pdf.w - 52, y=4, h=20)
+    # Logo in top-right (white background — logo has transparent/white bg)
+    logo_h = 14
+    logo_w = logo_h * 4.2  # preserve ~4.2:1 aspect ratio of the Upbuild logo
+    pdf.image(logo_file, x=pdf.w - pdf.r_margin - logo_w, y=6, h=logo_h)
 
     if _tmp_logo:
         try:
@@ -66,14 +65,21 @@ def generate_pdf(
         except Exception:
             pass
 
-    # Title text in header
-    pdf.set_font("Helvetica", style="B", size=13)
-    pdf.set_text_color(*WHITE)
-    pdf.set_xy(pdf.l_margin, 8)
-    pdf.cell(0, 10, f"Mentoring Assessment  -  Round {assessment['round']}")
+    # Title text top-left
+    pdf.set_font("Helvetica", style="B", size=14)
+    pdf.set_text_color(*PURPLE)
+    pdf.set_xy(pdf.l_margin, 7)
+    pdf.cell(page_w - logo_w - 4, 10, f"Mentoring Assessment  -  Round {assessment['round']}")
+
+    # Purple rule under header
+    pdf.set_y(22)
+    pdf.set_draw_color(*PURPLE)
+    pdf.set_line_width(0.8)
+    pdf.line(pdf.l_margin, 22, pdf.l_margin + page_w, 22)
+    pdf.set_line_width(0.2)
 
     # ── Meta block ───────────────────────────────────────────────────────────
-    pdf.set_xy(pdf.l_margin, 34)
+    pdf.set_xy(pdf.l_margin, 27)
 
     try:
         raw = str(assessment.get("submitted_at", ""))
