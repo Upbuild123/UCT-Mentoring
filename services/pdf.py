@@ -5,6 +5,14 @@ from datetime import datetime
 from fpdf import FPDF
 from config import COMPETENCIES, RATING_OPTIONS
 
+
+class _PDF(FPDF):
+    def footer(self) -> None:
+        self.set_y(-12)
+        self.set_font("Helvetica", size=8)
+        self.set_text_color(*GRAY)
+        self.cell(0, 6, "Upbuild Mentoring Program", align="C")
+
 # Upbuild purple
 PURPLE = (94, 50, 140)
 LIGHT_PURPLE = (237, 231, 246)
@@ -38,7 +46,7 @@ def generate_pdf(
     output_path: str,
     logo_path: str = "",
 ) -> None:
-    pdf = FPDF()
+    pdf = _PDF()
     pdf.set_auto_page_break(auto=True, margin=20)
     pdf.set_margins(18, 18, 18)
     pdf.add_page()
@@ -186,11 +194,5 @@ def generate_pdf(
     else:
         pdf.set_font("Helvetica", size=10)
         pdf.multi_cell(0, 6, mentor_feedback or "(no mentor feedback)")
-
-    # ── Footer ────────────────────────────────────────────────────────────────
-    pdf.set_y(-14)
-    pdf.set_font("Helvetica", size=8)
-    pdf.set_text_color(*GRAY)
-    pdf.cell(0, 6, "Upbuild Mentoring Program", align="C")
 
     pdf.output(output_path)
