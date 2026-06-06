@@ -139,8 +139,8 @@ def generate_pdf(
     pdf.set_font("Helvetica", style="B", size=9)
     pdf.set_text_color(*PURPLE)
     pdf.cell(col_comp, 7, "Competency", fill=True, new_x="RIGHT", new_y="TOP")
-    pdf.cell(col_side, 7, "Coach", fill=True, new_x="RIGHT", new_y="TOP", align="C")
-    pdf.cell(col_side, 7, "Mentor", fill=True, new_x="LMARGIN", new_y="NEXT", align="C")
+    pdf.cell(col_side, 7, "Coach", fill=True, new_x="RIGHT", new_y="TOP")
+    pdf.cell(col_side, 7, "Mentor", fill=True, new_x="LMARGIN", new_y="NEXT")
 
     pdf.set_font("Helvetica", size=9)
     pdf.set_text_color(*DARK_TEXT)
@@ -163,8 +163,8 @@ def generate_pdf(
         bg = (250, 248, 255) if fill else WHITE
         pdf.set_fill_color(*bg)
         pdf.cell(col_comp, 6, f"  {name}", fill=True, new_x="RIGHT", new_y="TOP")
-        pdf.cell(col_side, 6, str(coach_val), fill=True, new_x="RIGHT", new_y="TOP", align="C")
-        pdf.cell(col_side, 6, str(mentor_val), fill=True, new_x="LMARGIN", new_y="NEXT", align="C")
+        pdf.cell(col_side, 6, str(coach_val), fill=True, new_x="RIGHT", new_y="TOP")
+        pdf.cell(col_side, 6, str(mentor_val), fill=True, new_x="LMARGIN", new_y="NEXT")
         fill = not fill
     pdf.ln(4)
 
