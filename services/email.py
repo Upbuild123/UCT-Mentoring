@@ -87,26 +87,26 @@ def send_completion_notification(
     api_key = os.environ.get("RESEND_API_KEY", "")
     email_from = os.environ.get("EMAIL_FROM", "Mentoring Program <noreply@example.com>")
 
-    first_name = student_name.split()[0]
-    subject = f"Your UCT Mentoring Round {round_num} Assessment is Ready"
-    html = f"""
-<p>Hi {first_name},</p>
+    student_first = student_name.split()[0]
+
+    student_subject = f"Your UCT Mentoring Round {round_num} Assessment is Ready"
+    student_html = f"""
+<p>Hi {student_first},</p>
 <p>Your Round {round_num} assessment PDF is now complete and available to view.</p>
 <p><a href="{pdf_drive_url}">Round {round_num} assessment PDF</a></p>
 """
 
+    mentor_subject = f"{student_name}'s Round {round_num} Mentoring Assessment is Ready"
+    mentor_html = f"""
+<p>View <a href="{pdf_drive_url}">{student_first}'s Round {round_num} assessment PDF</a></p>
+"""
+
     if not api_key:
-        print(f"[email] Would send completion to {mentor_email} and {student_email}: {subject}")
+        print(f"[email] Would send completion to {mentor_email}: {mentor_subject}")
+        print(f"[email] Would send completion to {student_email}: {student_subject}")
         return
 
     resend_lib.api_key = api_key
-    recipients = [mentor_email]
+    resend_lib.Emails.send({"from": email_from, "to": mentor_email, "subject": mentor_subject, "html": mentor_html})
     if student_email:
-        recipients.append(student_email)
-    for recipient in recipients:
-        resend_lib.Emails.send({
-            "from": email_from,
-            "to": recipient,
-            "subject": subject,
-            "html": html,
-        })
+        resend_lib.Emails.send({"from": email_from, "to": student_email, "subject": student_subject, "html": student_html})
